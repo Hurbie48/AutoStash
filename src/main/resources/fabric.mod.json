@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "autostash",
+  "version": "${version}",
+  "name": "AutoStash",
+  "description": "Automatically transfers mined items into a linked chest, keeping your inventory clutter-free.",
+  "authors": [
+    "hurbie48"
+  ],
+  "contact": {
+    "homepage": "https://github.com/hurbie48",
+    "sources": "https://github.com/hurbie48/AutoStash"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/autostash/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.hurbie48.AutoStash"
+    ],
+    "client": [
+      "com.hurbie48.autostashClient"
+    ]
+  },
+  "mixins": [
+    "autostash.mixins.json",
+    {
+      "config": "autostash.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.2",
+    "minecraft": "~1.21.8",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
