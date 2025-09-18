@@ -45,28 +45,29 @@ public class SetChestCommand {
     }
 
     private static int addChest(ServerPlayerEntity player, String name, String category) {
-        if (player == null) return 0;
-
         BlockPos pos = getLookedAtChest(player);
         if (pos == null) return 1;
 
         // Check if chest is already stored
-        boolean exists = ChestStorage.getChests().values().stream().anyMatch(c -> c.getPos().equals(pos));
+        boolean exists = ChestStorage.getChests().values().stream()
+                .anyMatch(c -> c.getPos().equals(pos));
         if (exists) {
             ChatUtil.sendModMessage(player, "This chest is already stored!");
             return 1;
         }
 
-        // Store chest globally
-        ChestStorage.ChestInfo chestInfo = new ChestStorage.ChestInfo(name, category, pos);
-        ChestStorage.addChest(name, chestInfo);
-        ChestStorage.save(player.getServer());
+        // Store chest in world JSON
+            ChestStorage.ChestInfo chestInfo = new ChestStorage.ChestInfo(name, category, pos);
+            ChestStorage.addChest(name, chestInfo);
+            ChestStorage.save(player.getServer());
 
-        ChatUtil.sendModMessage(player,
-                "Chest '" + name + "' stored in category '" + category + "' at " +
-                        formatPos(pos) + ". Total stored: " + ChestStorage.getChests().size());
+
+            ChatUtil.sendModMessage(player,
+                    "Chest '" + name + "' stored in category '" + category + "' at " +
+                            formatPos(pos) + ". Total stored: " + ChestStorage.getChests().size());
         return 1;
-    }
+        }
+
 
     public static BlockPos getLookedAtChest(ServerPlayerEntity player) {
         Vec3d start = player.getCameraPosVec(1.0f);

@@ -131,8 +131,9 @@ public class CategoryCommand {
                                 )
                         )
 
-                        // REMOVE ITEM
+                        // REMOVE ITEM OR CATEGORY
                         .then(literal("remove")
+                                // Remove item
                                 .then(literal("item")
                                         .then(argument("category", StringArgumentType.word())
                                                 .then(argument("item", StringArgumentType.word())
@@ -162,6 +163,29 @@ public class CategoryCommand {
                                                             return 1;
                                                         })
                                                 )
+                                        )
+                                )
+                                // Remove category
+                                .then(literal("category")
+                                        .then(argument("name", StringArgumentType.word())
+                                                .executes(ctx -> {
+                                                    ServerPlayerEntity player = ctx.getSource().getPlayer();
+                                                    if (player == null) return 0;
+                                                    if (!AutoStashPermission.checkEnabled(player)) return 0;
+
+                                                    String name = StringArgumentType.getString(ctx, "name");
+
+                                                    if (!CategoryStorage.getCategories().containsKey(name)) {
+                                                        ChatUtil.sendModMessage(player, "Category '" + name + "' does not exist.");
+                                                        return 1;
+                                                    }
+
+                                                    CategoryStorage.getCategories().remove(name);
+                                                    CategoryStorage.save(player.getServer());
+
+                                                    ChatUtil.sendModMessage(player, "Category '" + name + "' removed.");
+                                                    return 1;
+                                                })
                                         )
                                 )
                         )
