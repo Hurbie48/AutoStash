@@ -1,3 +1,4 @@
+![alt text](https://i.ibb.co/S4CZGRQp/githubimage.png)
 # AutoStash
 
 AutoStash is a lightweight Minecraft mod that lets you register chests into categories and stash items into them. Chest data is stored per world in `saves/<world>/autostash_chests.json`.
