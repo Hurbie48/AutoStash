@@ -1,7 +1,5 @@
 package com.hurbie48.command;
 
-import com.hurbie48.config.PlayerData;
-import com.hurbie48.config.PlayerDataStorage;
 import com.hurbie48.util.AutoStashPermission;
 import com.hurbie48.util.ChatUtil;
 import com.mojang.brigadier.CommandDispatcher;
@@ -25,32 +23,31 @@ public class RemoveChestCommand {
                                     BlockPos pos = SetChestCommand.getLookedAtChest(player);
                                     if (pos == null) return 1;
 
-                                    PlayerData data = PlayerDataStorage.get(player.getUuid());
-
-                                    // Find chest by position
-                                    PlayerData.ChestInfo toRemove = null;
-                                    for (PlayerData.ChestInfo chest : data.getChests().values()) {
-                                        if (chest.getPos().equals(pos)) {
-                                            toRemove = chest;
+                                    // Find chest by position in ChestStorage
+                                    String chestKeyToRemove = null;
+                                    for (var entry : ChestStorage.getChests().entrySet()) {
+                                        if (entry.getValue().getPos().equals(pos)) {
+                                            chestKeyToRemove = entry.getKey();
                                             break;
                                         }
                                     }
 
-                                    if (toRemove == null) {
+                                    if (chestKeyToRemove == null) {
                                         ChatUtil.sendModMessage(player, "This chest is not stored.");
                                         return 1;
                                     }
 
-                                    // Remove chest
-                                    data.getChests().values().remove(toRemove);
-                                    PlayerDataStorage.save(player.getServer());
 
-                                    String posFormatted = formatPos(pos);
+                                    ChestStorage.removeChest(chestKeyToRemove);
+                                    ChestStorage.save(player.getServer());
+
                                     ChatUtil.sendModMessage(
                                             player,
-                                            "Chest '" + toRemove.getName() + "' removed at " + posFormatted +
-                                                    ". Total stored: " + data.getChests().size()
+                                            "Chest '" + chestKeyToRemove + "' removed at " +
+                                                    formatPos(pos) +
+                                                    ". Total stored: " + ChestStorage.getChests().size()
                                     );
+
                                     return 1;
                                 })
                         )

@@ -1,13 +1,15 @@
 package com.hurbie48.command;
 
 import com.hurbie48.util.ChatUtil;
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import com.mojang.brigadier.CommandDispatcher;
-
-import static net.minecraft.server.command.CommandManager.literal;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Map;
+
+import static net.minecraft.server.command.CommandManager.literal;
 
 public class ChestStatusCommand {
 
@@ -19,23 +21,27 @@ public class ChestStatusCommand {
                                     ServerPlayerEntity player = ctx.getSource().getPlayer();
                                     if (player == null) return 0;
 
-                                    // Use world storage instead of player-local
+                                    MinecraftServer server = player.getServer();
+                                    if (server == null) return 0;
+
+                                    // Load current world's chests
+                                    ChestStorage.load(player.getServer());
                                     Map<String, ChestStorage.ChestInfo> chests = ChestStorage.getChests();
+
 
                                     if (chests.isEmpty()) {
                                         ChatUtil.sendModMessage(player, "No chests are currently stored in this world.");
                                         return 1;
                                     }
 
-                                    ChatUtil.sendModMessage(player, "Chest status:");
+                                    ChatUtil.sendModMessage(player, "Chest status in this world:");
                                     int count = 1;
                                     for (ChestStorage.ChestInfo chest : chests.values()) {
+                                        BlockPos pos = chest.getPos();
                                         ChatUtil.sendModMessage(player,
-                                                count + ". Name: '" + chest.getName() + "', Category: '" +
-                                                        chest.getCategory() + "' at (" +
-                                                        chest.getPos().getX() + ", " +
-                                                        chest.getPos().getY() + ", " +
-                                                        chest.getPos().getZ() + ")"
+                                                count + ". Name: '" + chest.getName() +
+                                                        "', Category: '" + chest.getCategory() +
+                                                        "' at (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")"
                                         );
                                         count++;
                                     }
