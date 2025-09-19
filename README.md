@@ -18,4 +18,4 @@ AutoStash is a lightweight Minecraft mod that lets you register chests into cate
 - `/autostash removechest` — remove the chest you are looking at  
 - `/autostash cheststatus` — list all chests in the current world  
 - `/stash` — move items from your inventory into matching chests.
-- '/stash <category>' - move a specific category of items to matching chests
+- `/stash <category>` - move a specific category of items to matching chests
