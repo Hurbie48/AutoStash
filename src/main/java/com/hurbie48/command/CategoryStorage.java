@@ -13,7 +13,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CategoryStorage {
+    public static final String MOD_ID = "autostash";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     private static final Gson GSON = new Gson();
     private static Map<String, Set<String>> CATEGORIES = new HashMap<>();
@@ -42,7 +47,7 @@ public class CategoryStorage {
                 save(server);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(String.valueOf(e));
             CATEGORIES = new HashMap<>(DefaultCategories.getDefaults());
         }
     }
@@ -52,7 +57,7 @@ public class CategoryStorage {
         try (Writer writer = new FileWriter(file)) {
             GSON.toJson(CATEGORIES, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(String.valueOf(e));
         }
     }
 
